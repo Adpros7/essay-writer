@@ -1,5 +1,9 @@
+from concurrent.futures import thread
+import glob
 import os
+import time
 import tkinter as tk
+from easier_openai import Assistant
 
 def main():
     root = tk.Tk()
@@ -9,9 +13,31 @@ def main():
     prompt_box_text_var = tk.StringVar(root, value="Enter your prompt here")
     prompt_box = tk.Entry(width=100, textvariable=prompt_box_text_var, **extra_params)
     prompt_box.place(relx=0.5, rely=0.1, anchor="center")
-    def generate():
-        prompt = prompt_box_text_var.get()
-        key = os.getenv("OPENAI_API_KEY")
+    countdown_var = tk.StringVar(root, value="Generate button not clicked yet")
+    countdown_label = tk.Label(textvariable=countdown_var, **extra_params)
+    countdown_label.place(relx=0.5, rely=0.3, anchor="center")
+    def generate(var=countdown_var):
+        def code():
+            global countdown_var
+            var.set("Generating...")
+            prompt = prompt_box_text_var.get()
+            key = os.getenv("OPENAI_API_KEY")
+            client = Assistant(
+                key,
+                model="chatgpt-4o-latest",
+                system_prompt="Act as an expert essay writer. Type in a natural, humanlike way by looking at examples of human typing on the web.",
+            )
+            response = client.chat(prompt, web_search=True)
+            for i in range(4, -2, -1):
+                var.set(f"Typing in {i+1}")
+                time.sleep(1)
+
+            var.set("Starting...")
+
+
+
+        thread.ThreadPoolExecutor().submit(code)
+
 
     gen_button = tk.Button(text="Generate", command=generate, **extra_params)
     gen_button.place(relx=0.5, rely=0.2, anchor="center")
