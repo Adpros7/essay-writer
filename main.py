@@ -51,7 +51,7 @@ def main():
                     press_and_release(k, extra_key)
                     extra_key = ""
                 if random.randint(0, 13) == 0:
-                    type_of_typo = 2
+                    type_of_typo = random.randint(0, 2)
                     if type_of_typo == 0:
                         press_and_release(k, "l")
                         press_and_release(k, str(char))
@@ -72,7 +72,7 @@ def main():
 
                     k.release(str(char))
                 if not char == " ":
-                    time.sleep(0.17)
+                    time.sleep(0.85)
 
                 else:
                     time.sleep(0.1)
