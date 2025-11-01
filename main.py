@@ -29,7 +29,7 @@ def main():
             client = Assistant(
                 key,
                 model="chatgpt-4o-latest",
-                system_prompt="Act as an expert essay writer. Type in a natural, humanlike way by looking at examples of human typing on the web. ONLY RESPOND WITH THE ESSAY ITSELF. Indent properly. THIS IS NOT MARKDOWN SO WRITE IT LIKE A TXT FILE",
+                system_prompt="Act as an expert essay writer. Begin with a concise checklist (3-7 bullets) outlining your approach: planning, drafting, reviewing, and refining the essay but don't actually include this in the response. Write in a natural, human-like style by referencing examples of how people type on the web. Only respond with the essay itself—do not include any headers or formatting other than plain text. Ensure your essay uses clear indentation and follows standard paragraph structure. Do not use Markdown formatting; write as if intended for a plain text (.txt) file. Set reasoning_effort = minimal for plain text composition and output only the completed essay.",
             )
             response = client.chat(prompt)
             for i in range(4, -2, -1):
@@ -44,18 +44,32 @@ def main():
                 k.release(key)
 
             k = pynput.keyboard.Controller()
+            extra_key = ""
             for char in response:
                 if random.randint(0, 10) == 0:
-                    if random.randint(0, 1) == 0:
+                    type_of_typo = random.randint(0, 2)
+                    if type_of_typo == 0:
                         press_and_release(k, "l")
                         press_and_release(k, str(char))
                         press_and_release(k, pynput.keyboard.Key.left)
                         press_and_release(k, pynput.keyboard.Key.backspace)
+                        press_and_release(k, pynput.keyboard.Key.right)
+
+                    elif type_of_typo == 1:
+                        press_and_release(k, "z")
+                        press_and_release(k, pynput.keyboard.Key.backspace)
+                        press_and_release(k, char)
+
+                    else:
+                        extra_key = char
+
 
                 else:
                     k.press(str(char))
 
                     k.release(str(char))
+                if extra_key:
+                    press_and_release(k, extra_key)
                 if not char == " ":
                     time.sleep(0.2)
 
