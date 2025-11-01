@@ -1,9 +1,11 @@
 from concurrent.futures import thread
 import glob
 import os
+import random
 import time
 import tkinter as tk
 from easier_openai import Assistant
+import pynput
 
 def main():
     root = tk.Tk()
@@ -27,17 +29,40 @@ def main():
                 model="chatgpt-4o-latest",
                 system_prompt="Act as an expert essay writer. Type in a natural, humanlike way by looking at examples of human typing on the web.",
             )
-            response = client.chat(prompt, web_search=True)
+            response = client.chat(prompt)
             for i in range(4, -2, -1):
                 var.set(f"Typing in {i+1}")
                 time.sleep(1)
 
             var.set("Starting...")
+            print(response)
+            def press_and_release(k, key):
+                k.press(key)
+                k.release(key)
 
+            k = pynput.keyboard.Controller()
+            for char in response:
+                if random.randint(0, 12) == 0:
+                    if random.randint(0, 1) == 0:
+                        press_and_release(k, "l")
+                        press_and_release(k, str(char))
+                        press_and_release(k, pynput.keyboard.Key.left)
+                        press_and_release(k, pynput.keyboard.Key.backspace)
 
+                k.press(str(char))
+
+                k.release(str(char))
+                if not char == " ":
+                    time.sleep(0.2)
+
+                else:
+                    time.sleep(0.1)
+
+            var.set("Done")
+            time.sleep(2)
+            var.set("Generate button not clicked yet")
 
         thread.ThreadPoolExecutor().submit(code)
-
 
     gen_button = tk.Button(text="Generate", command=generate, **extra_params)
     gen_button.place(relx=0.5, rely=0.2, anchor="center")

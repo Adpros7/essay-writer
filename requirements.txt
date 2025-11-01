@@ -1,2 +1,2 @@
-easier-openai
+easier-openai==6.1
 pynput
