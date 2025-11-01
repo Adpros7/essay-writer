@@ -75,7 +75,7 @@ def main():
                     time.sleep(0.85)
 
                 else:
-                    time.sleep(0.1)
+                    time.sleep(0.9)
 
             var.set("Done")
             time.sleep(2)
