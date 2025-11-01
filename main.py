@@ -1,5 +1,4 @@
 from concurrent.futures import thread
-import glob
 import os
 import random
 import time
@@ -40,14 +39,19 @@ def main():
             print(response)
 
             def press_and_release(k, key):
-                k.press(key)
+                k.type(key)
                 k.release(key)
+                time.sleep(0.1)
 
             k = pynput.keyboard.Controller()
             extra_key = ""
             for char in response:
-                if random.randint(0, 10) == 0:
-                    type_of_typo = random.randint(0, 2)
+                if extra_key:
+                    time.sleep(0.07576)
+                    press_and_release(k, extra_key)
+                    extra_key = ""
+                if random.randint(0, 13) == 0:
+                    type_of_typo = 2
                     if type_of_typo == 0:
                         press_and_release(k, "l")
                         press_and_release(k, str(char))
@@ -63,15 +67,12 @@ def main():
                     else:
                         extra_key = char
 
-
                 else:
                     k.press(str(char))
 
                     k.release(str(char))
-                if extra_key:
-                    press_and_release(k, extra_key)
                 if not char == " ":
-                    time.sleep(0.2)
+                    time.sleep(0.17)
 
                 else:
                     time.sleep(0.1)
