@@ -7,6 +7,7 @@ import tkinter as tk
 from easier_openai import Assistant
 import pynput
 
+
 def main():
     root = tk.Tk()
     root.title("Essay Writer")
@@ -18,6 +19,7 @@ def main():
     countdown_var = tk.StringVar(root, value="Generate button not clicked yet")
     countdown_label = tk.Label(textvariable=countdown_var, **extra_params)
     countdown_label.place(relx=0.5, rely=0.3, anchor="center")
+
     def generate(var=countdown_var):
         def code():
             global countdown_var
@@ -27,7 +29,7 @@ def main():
             client = Assistant(
                 key,
                 model="chatgpt-4o-latest",
-                system_prompt="Act as an expert essay writer. Type in a natural, humanlike way by looking at examples of human typing on the web.",
+                system_prompt="Act as an expert essay writer. Type in a natural, humanlike way by looking at examples of human typing on the web. ONLY RESPOND WITH THE ESSAY ITSELF. Indent properly. THIS IS NOT MARKDOWN SO WRITE IT LIKE A TXT FILE",
             )
             response = client.chat(prompt)
             for i in range(4, -2, -1):
@@ -36,22 +38,24 @@ def main():
 
             var.set("Starting...")
             print(response)
+
             def press_and_release(k, key):
                 k.press(key)
                 k.release(key)
 
             k = pynput.keyboard.Controller()
             for char in response:
-                if random.randint(0, 12) == 0:
+                if random.randint(0, 10) == 0:
                     if random.randint(0, 1) == 0:
                         press_and_release(k, "l")
                         press_and_release(k, str(char))
                         press_and_release(k, pynput.keyboard.Key.left)
                         press_and_release(k, pynput.keyboard.Key.backspace)
 
-                k.press(str(char))
+                else:
+                    k.press(str(char))
 
-                k.release(str(char))
+                    k.release(str(char))
                 if not char == " ":
                     time.sleep(0.2)
 
