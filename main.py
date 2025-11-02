@@ -39,21 +39,25 @@ def main():
             print(response)
 
             def press_and_release(k, key):
+                if type(key) == pynput.keyboard.Key:
+                    k.press(key)
+                    k.release(key)
+                    return
                 k.type(key)
                 k.release(key)
                 randsleep(0.08)
 
             def randsleep(num):
-                time.sleep(random.randint(num-(num/3), num+(num/3)))
+                time.sleep(random.uniform(num - (num / 3), num + (num / 3)))
 
             k = pynput.keyboard.Controller()
             extra_key = ""
-            for char in response:
+            for i, char in enumerate(response):
                 if extra_key:
                     randsleep(0.07576)
                     press_and_release(k, extra_key)
                     extra_key = ""
-                if random.randint(0, 13) == 0:
+                if random.randint(0, 13) == 0 and not char == " " and not i <= 2:
                     type_of_typo = random.randint(0, 1)
                     if type_of_typo == 0:
                         press_and_release(k, "l")
@@ -66,7 +70,6 @@ def main():
                         press_and_release(k, "z")
                         press_and_release(k, pynput.keyboard.Key.backspace)
                         press_and_release(k, char)
-
 
                 else:
                     k.press(str(char))
