@@ -1,6 +1,7 @@
 from concurrent.futures import thread
 import os
 import random
+import threading
 import time
 import tkinter as tk
 from easier_openai import Assistant
@@ -85,7 +86,7 @@ def main():
             randsleep(2)
             var.set("Generate button not clicked yet")
 
-        thread.ThreadPoolExecutor().submit(code)
+        threading.Thread(target=code, daemon=True).start()
 
     gen_button = tk.Button(text="Generate", command=generate, **extra_params)
     gen_button.place(relx=0.5, rely=0.2, anchor="center")
