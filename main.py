@@ -41,13 +41,16 @@ def main():
             def press_and_release(k, key):
                 k.type(key)
                 k.release(key)
-                time.sleep(0.08)
+                randsleep(0.08)
+
+            def randsleep(num):
+                time.sleep(random.randint(num-(num/3), num+(num/3)))
 
             k = pynput.keyboard.Controller()
             extra_key = ""
             for char in response:
                 if extra_key:
-                    time.sleep(0.07576)
+                    randsleep(0.07576)
                     press_and_release(k, extra_key)
                     extra_key = ""
                 if random.randint(0, 13) == 0:
@@ -68,15 +71,15 @@ def main():
                 else:
                     k.press(str(char))
 
-                    k.release(str(char))1
+                    k.release(str(char))
                 if not char == " ":
-                    time.sleep(0.08)
+                    randsleep(0.08)
 
                 else:
-                    time.sleep(0.09)
+                    randsleep(0.09)
 
             var.set("Done")
-            time.sleep(2)
+            randsleep(2)
             var.set("Generate button not clicked yet")
 
         thread.ThreadPoolExecutor().submit(code)
